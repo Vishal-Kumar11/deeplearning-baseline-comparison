@@ -1,0 +1,50 @@
+{
+	"dataset": {
+		"csv_file": "sp500.csv",
+        "features": ["Close", "Volume"],
+		"lookback_period": 50,
+		"split_percentage": 0.85,
+		"apply_normalization": true
+	},
+	"training": {
+		"num_epochs": 50,
+		"samples_per_batch": 32
+	},
+	"architecture": {
+		"loss_function": "mse",
+		"optimization_method": "adam",
+		"checkpoint_folder": "saved_models",
+		"layers": [
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"input_timesteps": 49,
+                        "input_dim": 2,
+				"return_seq": true
+			},
+			{
+				"type": "dropout",
+				"rate": 0.2
+			},
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"return_seq": true
+			},
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"return_seq": false
+			},
+			{
+				"type": "dropout",
+				"rate": 0.2
+			},
+			{
+				"type": "dense",
+				"neurons": 1,
+				"activation": "linear"
+			}
+		]
+	}
+}
