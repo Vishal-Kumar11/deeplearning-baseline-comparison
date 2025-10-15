@@ -1,18 +1,10 @@
 # Deep Learning Baseline Comparison
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15+-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
-
 A systematic comparison of deep learning (LSTM) vs traditional statistical methods for time series forecasting.
 
 ---
 
 GitHub Repository: `deeplearning-baseline-comparison`
-
-# Financial Time Series Forecasting using LSTM Neural Networks
-
-A comprehensive machine learning system for predicting financial time series data using LSTM neural networks and traditional statistical methods. This project implements a complete forecasting pipeline with model comparison and performance evaluation.
 
 ## Overview
 
@@ -26,7 +18,6 @@ This project implements an end-to-end time series forecasting pipeline using LST
 - **Memory-Efficient Processing**: Batch generation for large datasets
 - **Configurable Architecture**: JSON-based model configuration
 - **Professional Documentation**: Comprehensive docstrings and comments
-- **Google Colab Compatible**: Optimized for cloud-based execution
 
 ## Dataset
 
@@ -43,25 +34,8 @@ The S&P 500 Dataset contains historical stock market data with multiple features
 - **Data Processing**: Pandas, NumPy
 - **Visualization**: Matplotlib
 - **Statistical Analysis**: ARIMA, Moving Averages
-- **Platform**: Google Colab Compatible
 
 ## Installation
-
-### Google Colab Setup
-
-1. Upload the project files to Google Colab
-2. Install dependencies:
-```python
-!pip install tensorflow>=2.15.0
-!pip install statsmodels>=0.14.0
-!pip install scikit-learn>=1.3.0
-!pip install matplotlib>=3.7.0
-```
-
-3. Run the forecasting pipeline:
-```python
-!python train_and_evaluate.py
-```
 
 ### Local Installation
 
@@ -108,21 +82,6 @@ python train_and_evaluate.py
 - Visualization plot displays predictions vs actual
 - Model checkpoints saved in `saved_models/`
 
-### Google Colab Usage
-
-```python
-# Upload your data files
-from google.colab import files
-uploaded = files.upload()
-
-# Run the forecasting pipeline
-!python train_and_evaluate.py
-
-# View results
-import matplotlib.pyplot as plt
-plt.show()
-```
-
 ## Project Structure
 
 ```
@@ -168,7 +127,7 @@ The `model_config.json` file controls all model parameters:
 }
 ```
 
-## 📊 Results & Evaluation
+## Results & Evaluation
 
 Performance evaluation on S&P 500 data (6,485 trading days, 2000-2025):
 
@@ -241,17 +200,15 @@ Comprehensive metrics including directional accuracy for financial applications.
 3. Make your changes
 4. Submit a pull request
 
-## License
+## Author
 
-MIT License - Feel free to use and modify for your projects.
-
-## Contact
-
-Created as part of machine learning portfolio development.
+**Vishal Kumar**  
+Master's in Data Science, Northeastern University  
+Boston, MA  
+[LinkedIn](https://www.linkedin.com/in/vishalkds)
 
 ## Acknowledgments
 
 - S&P 500 data from Yahoo Finance
 - Built with TensorFlow/Keras
 - Statistical methods via Statsmodels
-- Optimized for Google Colab execution
