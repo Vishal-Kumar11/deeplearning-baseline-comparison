@@ -205,41 +205,23 @@ class DataPreprocessor:
     def scale_data(self, sequence_data, single_window=False):
         """
         Normalize data windows using a base value of zero.
-        
+
         Applies normalization to data windows by dividing each value by the first
         value in the window and subtracting 1. This creates a percentage change
         representation that's often more suitable for neural network training.
-        
+
         Args:
             sequence_data (numpy.ndarray): Data windows to normalize
             single_window (bool): Whether the input is a single window or multiple
-            
+
         Returns:
             numpy.ndarray: Normalized data windows
-            
+
         Note:
             This normalization method assumes the first value in each window
             represents a meaningful baseline for percentage calculations.
         """
-        scaled_sequences = []
-        
-        # Handle single window case by wrapping in list
-        if single_window:
-            sequence_data = [sequence_data]
-            
-        # Process each window individually
-        for window in sequence_data:
-            scaled_seq = []
-            
-            # Normalize each column separately
-            for column_idx in range(window.shape[1]):
-                # Calculate percentage change from first value (with epsilon to prevent division by zero)
-                scaled_column = [((float(p) / (float(window[0, column_idx]) + 1e-8)) - 1) 
-                               for p in window[:, column_idx]]
-                scaled_seq.append(scaled_column)
-                
-            # Reshape and transpose back to original format
-            scaled_seq = np.array(scaled_seq).T
-            scaled_sequences.append(scaled_seq)
-            
-        return np.array(scaled_sequences)
+        # Vectorized normalization using NumPy broadcasting
+        sequence_data = np.array([sequence_data] if single_window else sequence_data, dtype=float)
+        base_vals = sequence_data[:, 0:1, :] + 1e-8  # (n_windows, 1, n_features)
+        return (sequence_data / base_vals) - 1

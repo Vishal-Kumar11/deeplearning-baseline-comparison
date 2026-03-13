@@ -256,47 +256,46 @@ class ForecastModel:
             for short-term forecasting with high accuracy requirements.
         """
         print('[ForecastModel] Predicting Point-by-Point...')
-        forecast_values = self.network.predict(input_data)
+        forecast_values = self.network.predict(input_data, verbose=0)
         forecast_values = np.reshape(forecast_values, (forecast_values.size,))
         return forecast_values
 
     def forecast_multi_sequence(self, input_data, sequence_len, forecast_horizon):
         """
         Predict multiple sequences by shifting the prediction window.
-        
+
         Generates multiple prediction sequences by shifting the input window
         forward by the forecast horizon after each prediction. This is useful
         for medium-term forecasting with multiple prediction points.
-        
+
         Args:
             input_data (numpy.ndarray): Input sequences for prediction
             sequence_len (int): Length of input sequences
             forecast_horizon (int): Number of steps to predict ahead
-            
+
         Returns:
             list: List of prediction sequences
-            
+
         Note:
-            This method creates multiple prediction sequences by shifting
-            the input window, making it suitable for medium-term forecasting.
+            This method batches all sequences together per step, reducing
+            predict() calls from n_sequences*forecast_horizon down to forecast_horizon.
         """
         print('[ForecastModel] Predicting Sequences Multiple...')
-        forecast_list = []
-        
-        # Generate multiple prediction sequences
-        for i in range(int(len(input_data)/forecast_horizon)):
-            input_window = input_data[i*forecast_horizon]
-            forecast_sequence = []
-            
-            # Predict multiple steps ahead
-            for j in range(forecast_horizon):
-                forecast_sequence.append(self.network.predict(input_window[newaxis,:,:])[0,0])
-                input_window = input_window[1:]
-                input_window = np.insert(input_window, [sequence_len-2], forecast_sequence[-1], axis=0)
-                
-            forecast_list.append(forecast_sequence)
-            
-        return forecast_list
+        n_sequences = int(len(input_data) / forecast_horizon)
+        n_features = input_data.shape[2]
+
+        # Stack all initial windows: (n_sequences, seq_len-1, n_features)
+        windows = np.array([input_data[i * forecast_horizon] for i in range(n_sequences)])
+        forecast_array = np.zeros((n_sequences, forecast_horizon))
+
+        # One batched predict call per step instead of one per (sequence, step)
+        for j in range(forecast_horizon):
+            preds = self.network.predict(windows, verbose=0)[:, 0]  # (n_sequences,)
+            forecast_array[:, j] = preds
+            new_rows = np.broadcast_to(preds[:, newaxis, newaxis], (n_sequences, 1, n_features)).copy()
+            windows = np.concatenate([windows[:, 1:, :], new_rows], axis=1)
+
+        return forecast_array.tolist()
 
     def forecast_full_sequence(self, input_data, sequence_len):
         """
@@ -321,9 +320,9 @@ class ForecastModel:
         input_window = input_data[0]
         forecast_sequence = []
         
-        # Predict for the entire sequence
+        # Predict for the entire sequence using direct model call (avoids predict() overhead)
         for i in range(len(input_data)):
-            forecast_sequence.append(self.network.predict(input_window[newaxis,:,:])[0,0])
+            forecast_sequence.append(self.network(input_window[newaxis,:,:], training=False).numpy()[0,0])
             input_window = input_window[1:]
             input_window = np.insert(input_window, [sequence_len-2], forecast_sequence[-1], axis=0)
             
