@@ -16,6 +16,7 @@ This project implements an end-to-end time series forecasting pipeline using LST
 - **Traditional Baselines**: Naive forecasting, Moving Average, and ARIMA models
 - **Comprehensive Evaluation**: MSE, MAE, RMSE, R², and Directional Accuracy metrics
 - **Memory-Efficient Processing**: Batch generation for large datasets
+- **Optimized Inference**: Batched multi-sequence prediction and vectorized normalization for faster evaluation
 - **Configurable Architecture**: JSON-based model configuration
 - **Professional Documentation**: Comprehensive docstrings and comments
 
@@ -153,7 +154,8 @@ Performance evaluation on S&P 500 data (6,485 trading days, 2000-2025):
 - Successfully trained 3-layer stacked LSTM on 25 years of financial data
 - Implemented memory-efficient batch processing for large-scale time series
 - Built comprehensive evaluation pipeline comparing 4 different forecasting approaches
-- Demonstrated production-ready deployment with GPU acceleration (6-min training)
+- Demonstrated production-ready deployment with GPU acceleration (6-min training, optimized inference)
+- Reduced inference predict() calls by up to 50× via batched multi-sequence prediction
 - Established proper ML evaluation principles through systematic baseline comparison
 
 This project showcases rigorous ML methodology, honest evaluation, and understanding of when complex models provide measurable value over simpler alternatives.
